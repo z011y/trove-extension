@@ -13,7 +13,6 @@ dist-ssr
 *.local
 .env
 __pycache__
-poetry.lock
 
 # Editor directories and files
 .vscode/*

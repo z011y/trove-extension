@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "trove"
+version = "0.1.0"
+description = ""
+authors = ["Cameron Zollinger <cameron@zolly.dev>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.97.0"
+supabase = "^1.0.3"
+python-dotenv = "^1.0.0"
+uvicorn = "^0.22.0"
+
+[tool.poetry.scripts]
+start = "src.app:run"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

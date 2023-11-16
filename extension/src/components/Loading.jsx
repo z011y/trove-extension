@@ -13,8 +13,7 @@ export function Loading() {
       <CircleNotch
         size="48"
         weight="bold"
-        className="rotate"
-        style={{ fill: 'url(#gradient)' }}
+        className="rotate fill-[url(#gradient)]"
       />
     </div>
   );

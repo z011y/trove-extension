@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10.9"
 fastapi = "^0.97.0"
 supabase = "^1.0.3"
 python-dotenv = "^1.0.0"

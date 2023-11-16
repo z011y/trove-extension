@@ -1,24 +1,20 @@
 import { useState, useEffect, useContext } from 'react';
 import { ArrowClockwise, XCircle } from '@phosphor-icons/react';
-import { Collection } from './Collection';
-import { CollectionsContext } from '../App';
+import { ListItemCollection } from './ListItemCollection';
+import { CollectionsContext } from '../context/collections';
 
-export function AddToCollectionModal({ itemId, isOpen, setIsOpen, title }) {
+export function AddToCollectionModal({ productId, isOpen, setIsOpen, title }) {
   const [isLoading, setIsLoading] = useState(false);
   const { collections } = useContext(CollectionsContext);
 
   async function addToCollection(collectionId) {
     setIsLoading(true);
-    const data = JSON.stringify({
-      item_id: itemId,
-      collection_id: collectionId,
-    });
-    await fetch('http://localhost:8000/add-to-collection', {
+    await fetch('http://10.0.0.139:3001/add-to-collection', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: data,
+      body: JSON.stringify({
+        productId,
+        collectionId,
+      }),
     });
     setIsLoading(false);
     setIsOpen(false);
@@ -33,20 +29,8 @@ export function AddToCollectionModal({ itemId, isOpen, setIsOpen, title }) {
 
   if (isOpen) {
     return (
-      <div
-        className="border w-full"
-        style={{
-          position: 'fixed',
-          zIndex: 10,
-          bottom: 0,
-          left: 0,
-          height: '66vh',
-          borderRadius: '1rem 1rem 0 0',
-          backgroundColor: 'white',
-          boxShadow: '0px 0px 32px rgba(0, 0, 0, 0.2)',
-        }}
-      >
-        <div className="border-b space-between p" style={{ height: '3rem' }}>
+      <div className="border w-full fixed z-10 bottom-0 left-0 h-[66vh] rounded-t-2xl bg-white shadow-xl">
+        <div className="border-b space-between p-4 h-12">
           <h3>{title}</h3>
           {isLoading ? (
             <ArrowClockwise className="rotate" size="24" />
@@ -59,18 +43,11 @@ export function AddToCollectionModal({ itemId, isOpen, setIsOpen, title }) {
             />
           )}
         </div>
-        <div
-          style={{
-            overflowY: 'scroll',
-            overscrollBehavior: 'contain',
-            height: '100%',
-            paddingBottom: '48px',
-          }}
-        >
+        <div className="overflow-y-scroll overscroll-contain h-full pb-12">
           {collections.map((collection) => {
             return (
               <div onClick={() => addToCollection(collection.id)}>
-                <Collection collection={collection} />
+                <ListItemCollection collection={collection} />
               </div>
             );
           })}

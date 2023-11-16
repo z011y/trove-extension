@@ -1,15 +1,18 @@
 {
   "manifest_version": 3,
   "name": "Trove",
-  "description": "Trove",
-  "version": "1.0",
-  "content_security_policy": {
-    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  "description": "Store and organize your favorite products from across the internet",
+  "version": "0.0.0.1",
+  "icons": {
+    "16": "trove_16.png",
+    "32": "trove_32.png",
+    "48": "trove_48.png",
+    "128": "trove_128.png"
   },
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab"],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://*/*", "http://*/*"],
       "js": ["content.js"]
     }
   ],

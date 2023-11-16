@@ -21,36 +21,28 @@ export function ProductImage({
   if (isLoading) {
     return (
       <div
-        className="shimmer"
-        style={{ minWidth: width, height: height, borderRadius: '12px' }}
+        className="shimmer rounded-xl"
+        style={{ minWidth: width, height: height }}
       ></div>
     );
   }
 
   return (
     <div
+      className={`relative rounded-xl bg-center bg-cover bg-no-repeat ${
+        isLoading ? 'hidden' : ''
+      }`}
       style={{
-        display: isLoading ? 'none' : 'block',
-        position: 'relative',
+        backgroundImage: `url(${url})`,
         minWidth: width,
         height: height,
-        borderRadius: '12px',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundImage: `url(${url})`,
-        backgroundRepeat: 'norepeat',
       }}
     >
       {isRemoveable ? (
         <XCircle
           size="24"
           weight="duotone"
-          className="clickable"
-          style={{
-            position: 'absolute',
-            top: '-8px',
-            right: '-8px',
-          }}
+          className="clickable absolute -top-2 -right-2"
           onClick={removeMethod}
         />
       ) : null}

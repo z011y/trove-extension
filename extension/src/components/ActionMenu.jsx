@@ -1,9 +1,6 @@
-import { useRef, useEffect, useContext } from 'react';
-import { PencilSimple, Trash, PlusCircle, Copy } from '@phosphor-icons/react';
-import { ItemsContext } from '../App';
+import { useRef, useEffect } from 'react';
 
 export function ActionMenu({ setIsVisible, parentRef, actions }) {
-  const { getItems } = useContext(ItemsContext);
   const menuRef = useRef(null);
 
   function handleClickOutside(e) {
@@ -14,13 +11,6 @@ export function ActionMenu({ setIsVisible, parentRef, actions }) {
     ) {
       setIsVisible(false);
     }
-  }
-
-  async function deleteItem() {
-    await fetch(`http://localhost:8000/delete-item/${item.id}`, {
-      method: 'POST',
-    });
-    getItems();
   }
 
   useEffect(() => {
@@ -34,27 +24,13 @@ export function ActionMenu({ setIsVisible, parentRef, actions }) {
   return (
     <div
       ref={menuRef}
-      className="border shadow"
-      style={{
-        position: 'absolute',
-        right: '24px',
-        top: '24px',
-        zIndex: 9,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        backgroundColor: 'white',
-        padding: '1rem',
-        borderRadius: '16px',
-      }}
+      className="border shadow absolute right-6 top-6 z-[9] flex flex-col gap-4 bg-white p-4 rounded-2xl"
     >
       {actions.map((action) => {
         return (
           <div
-            className={`flow clickable text-hoverable ${
-              action.warn ? 'text-warn' : ''
-            }`}
-            style={{ gap: '0.5rem', whiteSpace: 'nowrap' }}
+            className={`flow clickable text-hoverable gap-2 whitespace-nowrap ${action.warn ? 'text-warn' : ''
+              }`}
             onClick={action.method}
           >
             {action.icon}

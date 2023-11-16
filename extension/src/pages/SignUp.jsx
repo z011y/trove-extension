@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link } from 'wouter';
+import { SessionContext } from '../context/session';
 
-export function SignUp({ getSession }) {
+export function SignUp() {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const { signUp } = useContext(SessionContext);
 
   function onEmailChange(e) {
     setEmail(e.target.value);
@@ -13,46 +15,11 @@ export function SignUp({ getSession }) {
     setPassword(e.target.value);
   }
 
-  async function submitSignUp() {
-    const data = JSON.stringify({
-      email,
-      password,
-    });
-
-    await fetch('http://localhost:8000/sign-up', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: data,
-    });
-  }
-
   return (
-    <div
-      className="stack w-full h-full p"
-      style={{
-        backgroundColor: '#F5F2FF',
-        justifyContent: 'center',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          alignSelf: 'center',
-          marginLeft: '-4px',
-          paddingBottom: '16px',
-        }}
-      >
-        <img style={{ height: '2rem' }} src="trove.png" alt="logo" />
-        <h1
-          style={{
-            marginTop: '6px',
-            marginLeft: '-4px',
-            letterSpacing: '-3.75px',
-            fontSize: '2.5rem',
-            color: '#20134B',
-          }}
-        >
+    <div className="stack w-full h-full p-4 bg-[#f5f2ff] justify-center">
+      <div className="flex items-center self-center -ml-1 pb-4">
+        <img className="h-8" src="trove.png" alt="logo" />
+        <h1 className="mt-2 -ml-1 tracking-[-3.75px] text-4xl text-[#20134b]">
           Trove
         </h1>
       </div>
@@ -62,8 +29,8 @@ export function SignUp({ getSession }) {
         onChange={onPasswordChange}
         placeholder="Your Password"
       />
-      <button onClick={submitSignUp}>sign up</button>
-      <span style={{ textAlign: 'center' }}>
+      <button onClick={() => signUp(email, password)}>sign up</button>
+      <span className="text-center">
         Already have an account? <Link href="/login">Login</Link>
       </span>
     </div>

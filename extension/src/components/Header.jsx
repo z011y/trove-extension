@@ -4,22 +4,12 @@ import { NavBar } from './NavBar';
 
 export function Header() {
   return (
-    <div className="fixed w-full" style={{ zIndex: '9' }}>
-      <div
-        className="split w-full border-b px h-3 bg-violet"
-        style={{
-          zIndex: 10,
-          backgroundColor: 'rgba(245, 242, 255, 0.8)',
-          backdropFilter: 'blur(1rem)',
-        }}
-      >
+    <div className="fixed top-0 left-0 w-full z-[9]">
+      <div className="split w-full border-b px-4 h-12 bg-violet z-10 bg-white/80 backdrop-blur-lg">
         <Link href="/">
-          <div
-            className="clickable"
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
-            <img className="h-1" src="trove.png" alt="logo" />
-            <h1 style={{ marginTop: '3px', letterSpacing: '-1.5px' }}>Trove</h1>
+          <div className="clickable flex items-center">
+            <img className="h-4" src="trove.png" alt="logo" />
+            <h1 className="mt-[3px] tracking-[-1.5px]">Trove</h1>
           </div>
         </Link>
         <Link href="/account">

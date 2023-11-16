@@ -6,17 +6,11 @@ export function NavLink({ name, href, icon }) {
   return (
     <Link href={href}>
       <div
-        className={`${
+        className={`clickable flow rounded-[32px] py-1 px-2 h-8 whitespace-nowrap ${
           isActive
             ? 'bg-gradient border-bold'
             : 'bg-violet border border-hoverable'
-        } clickable flow`}
-        style={{
-          borderRadius: '32px',
-          padding: '4px 8px 4px 8px',
-          height: '32px',
-          whiteSpace: 'nowrap',
-        }}
+        }`}
       >
         {icon}
         {name}

@@ -1,62 +1,42 @@
 import { useContext } from 'react';
 import { Link, useRoute } from 'wouter';
 import { Header } from './components/Header';
-import { CurrentItemContext } from './App';
+import { ActiveTabProductContext } from '././context/activeTabProduct';
 import { ProductImage } from './components/ProductImage';
 
 export function Layout({ children }) {
-  const { currentItem } = useContext(CurrentItemContext);
-  const [isActiveItemPage] = useRoute('/');
+  const { activeTabProduct } = useContext(ActiveTabProductContext);
+  const [isActiveTabProductPage] = useRoute('/');
+  const [isCollectionListPage] = useRoute('/collections');
+  const [isYourTrovePage] = useRoute('/your-trove');
+  const shouldDisplayActiveTabProduct =
+    !isActiveTabProductPage || !isCollectionListPage || !isYourTrovePage;
 
   return (
     <>
       <Header />
       <main
-        style={{
-          marginTop: 'calc(3rem + 48px)',
-          paddingBottom: `${isActiveItemPage ? '0px' : '97px'}`,
-        }}
+        className="mt-24"
+        style={{ paddingBottom: shouldDisplayActiveTabProduct ? '0px' : '97px' }}
       >
         {children}
       </main>
-      {isActiveItemPage ? null : (
+      {shouldDisplayActiveTabProduct ? null : (
         <Link href="/">
-          <div
-            className="space-between p clickable"
-            style={{
-              gap: '8px',
-              position: 'fixed',
-              bottom: 0,
-              left: 0,
-              width: '100%',
-              backgroundColor: 'rgba(245, 242, 255, 0.8)',
-              backdropFilter: 'blur(1rem)',
-              borderTop: '1px solid #e4defc',
-              zIndex: 8,
-            }}
-          >
-            <div
-              className="flow"
-              style={{ height: '64px', gap: '8px', overflow: 'hidden' }}
-            >
+          <div className="space-between p-4 clickable gap-2 fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-lg border-t border-[#e4defc] z-[8]">
+            <div className="flow h-16 gap-2 overflow-hidden">
               <ProductImage
-                url={currentItem?.imageUrls ? currentItem.imageUrls[0] : null}
+                url={activeTabProduct?.imageUrls ? activeTabProduct.imageUrls[0] : null}
                 height="64px"
                 width="64px"
               />
-              <h3
-                style={{
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                }}
-              >
-                {currentItem.name}
+              <h3 className="text-ellipsis whitespace-nowrap overflow-hidden">
+                {activeTabProduct?.name}
               </h3>
             </div>
-            <h4 style={{ maxWidth: '33%' }}>{`$${Number(
-              currentItem.price
-            ).toFixed(2)}`}</h4>
+            <h4 className="max-w-[33%]">{`$${Number(activeTabProduct?.price).toFixed(
+              2
+            )}`}</h4>
           </div>
         </Link>
       )}

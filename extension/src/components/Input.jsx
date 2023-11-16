@@ -7,7 +7,7 @@ export function Input({
   onChange,
 }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+    <div className="flex flex-col gap-2">
       <label htmlFor={id}>{label}</label>
       <input
         id={id}

@@ -1,129 +1,106 @@
-import { useEffect, useState, createContext } from 'react';
-import { Router, Route, Redirect } from 'wouter';
+import { useEffect, useState, useContext } from 'react';
+import { Route, Redirect } from 'wouter';
+
+import './App.css';
+import { ActiveTabProductContext } from './context/activeTabProduct';
+import { CollectionsContext } from './context/collections';
+import { ProductsContext } from './context/products';
+import { SessionContext } from './context/session';
 import { Layout } from './Layout';
 import { ScrollToTop } from './components/ScrollToTop';
 import { Loading } from './components/Loading';
-import { Login } from './pages/Login';
-import { SignUp } from './pages/SignUp';
-import { Home } from './pages/Home';
-import { Trove } from './pages/Trove';
-import { Account } from './pages/Account';
-import { CollectionsPage } from './pages/./CollectionsPage';
-import { CollectionPage } from './pages/CollectionPage';
-import { ItemPage } from './pages/ItemPage';
-import { CreateCollection } from './pages/CreateCollection';
-import { EditItem } from './pages/EditItem';
-import { EditCollection } from './pages/EditCollection';
-import './App.css';
 
-export const SessionContext = createContext(null);
-export const CurrentItemContext = createContext({});
-export const CollectionsContext = createContext([]);
-export const ItemsContext = createContext([]);
+import { SignIn } from './pages/SignIn';
+import { SignUp } from './pages/SignUp';
+import { Account } from './pages/Account';
+import { ActiveTabProduct } from './pages/ActiveTabProduct';
+import { YourTrove } from './pages/YourTrove';
+import { CollectionList } from './pages/./CollectionList';
+import { CollectionDetails } from './pages/CollectionDetails';
+import { CollectionAdd } from './pages/CollectionAdd';
+import { CollectionEdit } from './pages/CollectionEdit';
+import { ProductDetails } from './pages/ProductDetails';
+import { ProductEdit } from './pages/ProductEdit';
 
 export function App() {
-  const [currentItem, setCurrentItem] = useState(null);
-  const [collections, setCollections] = useState(null);
-  const [items, setItems] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  async function getCurrentItem() {
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      lastFocusedWindow: true,
-    });
-    const response = await chrome.tabs.sendMessage(tab.id, {
-      getItem: true,
-    });
-    setCurrentItem(response);
-  }
-
-  async function getCollections() {
-    const res = await fetch(`http://localhost:8000/get-collections`);
-    const data = await res.json();
-    setCollections(data);
-  }
-
-  async function getItems() {
-    const res = await fetch(`http://localhost:8000/get-items`);
-    const data = await res.json();
-    setItems(data);
-  }
+  const { getActiveTabProduct } = useContext(ActiveTabProductContext);
+  const { getCollections } = useContext(CollectionsContext);
+  const { getProducts } = useContext(ProductsContext);
+  const { session, getSession } = useContext(SessionContext);
 
   async function fetchData() {
     setIsLoading(true);
-    const res = await fetch('http://localhost:8000/get-session');
-    const data = await res.json();
-
-    if (data.session) {
-      setIsAuthenticated(true);
-      await getCollections();
-      await getItems();
-    }
-
+    await getCollections();
+    await getProducts();
     setIsLoading(false);
   }
 
   useEffect(() => {
-    getCurrentItem();
-    fetchData();
+    setIsLoading(true);
+    getSession();
+    getActiveTabProduct();
+    setIsLoading(false);
+    console.log(session);
   }, []);
+
+  useEffect(() => {
+    console.log(session);
+    if (session) {
+      fetchData();
+    } else {
+      setIsLoading(false);
+    }
+  }, [session]);
 
   if (isLoading) return <Loading />;
 
-  if (isAuthenticated) {
+  if (session) {
     return (
       <>
-        <CurrentItemContext.Provider value={{ currentItem, setCurrentItem }}>
-          <CollectionsContext.Provider value={{ collections, getCollections }}>
-            <ItemsContext.Provider value={{ items, getItems }}>
-              <ScrollToTop />
-              <Layout>
-                <Redirect to="/" />
-                <Route path="/">
-                  <Home />
-                </Route>
-                <Route path="/all-items">
-                  <Trove />
-                </Route>
-                <Route path="/account">
-                  <Account setIsAuthenticated={setIsAuthenticated} />
-                </Route>
-                <Route path="/collections">
-                  <CollectionsPage />
-                </Route>
-                <Route path="/new-collection">
-                  <CreateCollection />
-                </Route>
-                <Route path="/collection/:id">
-                  {(params) => <CollectionPage id={params.id} />}
-                </Route>
-                <Route path="/item/:id">
-                  {(params) => <ItemPage id={params.id} />}
-                </Route>
-                <Route path="/edit-item/:id">
-                  {(params) => <EditItem id={params.id} />}
-                </Route>
-                <Route path="/edit-collection/:id">
-                  {(params) => <EditCollection id={params.id} />}
-                </Route>
-              </Layout>
-            </ItemsContext.Provider>
-          </CollectionsContext.Provider>
-        </CurrentItemContext.Provider>
+        <ScrollToTop />
+        <Layout>
+          <Redirect to="/" />
+          <Route path="/">
+            <ActiveTabProduct />
+          </Route>
+          <Route path="/your-trove">
+            <YourTrove />
+          </Route>
+          <Route path="/account">
+            <Account />
+          </Route>
+          <Route path="/collections">
+            <CollectionList />
+          </Route>
+          <Route path="/new-collection">
+            <CollectionAdd />
+          </Route>
+          <Route path="/collection/:id">
+            {(params) => <CollectionDetails id={params.id} />}
+          </Route>
+          <Route path="/product/:id">
+            {(params) => <ProductDetails id={params.id} />}
+          </Route>
+          <Route path="/edit-product/:id">
+            {(params) => <ProductEdit id={params.id} />}
+          </Route>
+          <Route path="/edit-collection/:id">
+            {(params) => <CollectionEdit id={params.id} />}
+          </Route>
+        </Layout>
       </>
     );
   }
 
   return (
     <>
-      <Redirect to="/login" />
-      <Route path="/login">
-        <Login setIsAuthenticated={setIsAuthenticated} fetchData={fetchData} />
+      <Redirect to="/sign-in" />
+      <Route path="/sign-in">
+        <SignIn />
       </Route>
       <Route path="/sign-up">
-        <SignUp getSession={fetchData} />
+        <SignUp />
       </Route>
     </>
   );

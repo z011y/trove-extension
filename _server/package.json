@@ -1,0 +1,23 @@
+{
+  "name": "trove",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "start": "npm run build && node ./build/app.js"
+  },
+  "author": "Cameron Zollinger (z011y)",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "express": "^4.18.2",
+    "openai": "^4.11.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.18",
+    "@types/node": "^20.8.2",
+    "dotenv": "^16.3.1",
+    "typescript": "^5.2.2"
+  }
+}

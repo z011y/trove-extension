@@ -59,9 +59,9 @@ function getProductData() {
 }
 
 (() => {
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
     const productData = getProductData();
-    if (request.getItem) sendResponse(productData);
+    if (request.getProduct) sendResponse(productData);
     return true;
   });
 })();

@@ -1,27 +1,21 @@
 import { useContext } from 'react';
-import { FlatList, View, StyleSheet, useWindowDimensions } from 'react-native';
+import { Button, View, StyleSheet, useWindowDimensions } from 'react-native';
 import ProductListItem from '../components/ProductListItem';
 import { CollectionProductsContext } from '../context/collections';
+import { SessionContext } from './_layout';
 
 export default function Account() {
-  const { products } = useContext(CollectionProductsContext);
+  const { setSession } = useContext(SessionContext);
   const { width } = useWindowDimensions();
+
+  async function signOut() {
+    await fetch('http://10.0.0.139:3001/sign-out');
+    setSession(false);
+  }
 
   return (
     <View style={styles.container}>
-      <FlatList
-        style={{
-          width: width,
-          paddingTop: 144,
-        }}
-        data={products}
-        renderItem={({ item }) => <ProductListItem product={item} />}
-        keyExtractor={(item) => item.id}
-        refreshing={products ? true : false}
-        ItemSeparatorComponent={() => (
-          <View style={{ backgroundColor: '#e4defc', height: 1 }} />
-        )}
-      />
+      <Button title="Sign Out" onPress={signOut} />
     </View>
   );
 }

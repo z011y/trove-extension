@@ -11,7 +11,9 @@ import ProductListItem from '../../components/ProductListItem';
 import { CollectionProductsContext } from '../../context/collections';
 import { ActiveCollectionContext } from '../../context/activeCollection';
 import CollectionTabs from '../../components/CollectionTabs';
-import CollectionModal from '../../components/CollectionModal';
+import CollectionModalActions from '../../components/CollectionModalActions';
+import CollectionModalAdd from '../../components/CollectionModalAdd';
+import { Paragraph } from '../../components/Text';
 
 export default function Home() {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -49,7 +51,8 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <CollectionTabs />
-      <CollectionModal collection={collections[activeCollection - 1]} />
+      <CollectionModalActions collection={collections[activeCollection - 1]} />
+      <CollectionModalAdd />
       <FlatList
         style={{
           padding: 8,
@@ -66,13 +69,7 @@ export default function Home() {
               justifyContent: 'center',
             }}
           >
-            <Text
-              style={{
-                fontFamily: 'Epilogue_500Medium',
-              }}
-            >
-              No products in collection.
-            </Text>
+            <Paragraph>No products in collection.</Paragraph>
           </View>
         )}
         data={collectionProducts}

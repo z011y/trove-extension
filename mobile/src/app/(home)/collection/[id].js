@@ -5,6 +5,7 @@ import ProductListItem from '../../../components/ProductListItem';
 import { X } from 'phosphor-react-native';
 import { CollectionProductsContext } from '../../../context/collections';
 import CollectionListItem from '../../../components/CollectionListItem';
+import { Paragraph } from '../../../components/Text';
 
 export default function CollectionDetails() {
   const { collections } = useContext(CollectionProductsContext);
@@ -39,16 +40,7 @@ export default function CollectionDetails() {
           borderBottomWidth: 1,
         }}
       >
-        <Text
-          style={{
-            fontFamily: 'Epilogue_700Bold',
-            fontSize: 20,
-            color: '#20134b',
-            letterSpacing: -1,
-          }}
-        >
-          {id}
-        </Text>
+        <Heading level={2}>{id}</Heading>
         <Link href="../">
           <X size="24" weight="bold" />
         </Link>

@@ -5,12 +5,18 @@ import { db } from '../app';
 export async function getCollections(): Promise<
   PostgrestSingleResponse<Collection[]>
 > {
-  return await db.from('collection').select(`
+  const { data, error } = await db.auth.getSession();
+  return await db
+    .from('collection')
+    .select(
+      `
       id,
       name,
       description,
       total
-    `);
+    `
+    )
+    .eq('user_id', data.session?.user.id);
 }
 
 export async function addToCollection(
@@ -58,6 +64,5 @@ export async function deleteCollection(collectionId: Collection['id']) {
     .from('collection')
     .delete()
     .eq('id', collectionId);
-  if (collectionProducts.error) return collectionProducts.error;
-  if (collections.error) return collections.error;
+  return collectionProducts.error ?? collections.error;
 }

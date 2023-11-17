@@ -143,6 +143,9 @@ router.post(
   async (req: Request, res: Response): Promise<void> => {
     const error = await deleteCollection(Number(req.params.collectionId));
     if (error) res.status(500).json({ message: error.message });
-    else res.status(200).json({ success: true });
+    else
+      res
+        .status(200)
+        .json({ success: true, collectionId: req.params.collectionId });
   }
 );

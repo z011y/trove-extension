@@ -16,12 +16,15 @@ import {
 } from 'phosphor-react-native';
 import { ActiveCollectionContext } from '../context/activeCollection';
 import { CollectionProductsContext } from '../context/collections';
-import { CollectionModalContext } from './CollectionModal';
+import { CollectionModalActionsContext } from './CollectionModalActions';
+import * as Haptics from 'expo-haptics';
 
 export default function Header() {
   const { activeCollection } = useContext(ActiveCollectionContext);
   const { collections } = useContext(CollectionProductsContext);
-  const { setIsCollectionModalVisible } = useContext(CollectionModalContext);
+  const { setIsCollectionModalActionsVisible } = useContext(
+    CollectionModalActionsContext
+  );
   const { width } = useWindowDimensions();
   const router = useRouter();
 
@@ -52,7 +55,12 @@ export default function Header() {
           }}
         > */}
         {collections[activeCollection - 1] ? (
-          <Pressable onPress={() => setIsCollectionModalVisible(true)}>
+          <Pressable
+            onPress={() => {
+              Haptics.selectionAsync();
+              setIsCollectionModalVisible(true);
+            }}
+          >
             <View
               style={{
                 display: 'flex',

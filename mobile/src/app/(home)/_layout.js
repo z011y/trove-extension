@@ -2,10 +2,10 @@ import { useContext, useEffect, useState } from 'react';
 import { Stack } from 'expo-router/stack';
 import Header from '../../components/Header';
 import { CollectionProductsContext } from '../../context/collections';
-import { CollectionModalContext } from '../../components/CollectionModal';
+import { CollectionModalActionsContext } from '../../components/CollectionModalActions';
 
 export default function HomeLayout() {
-  const [isCollectionModalVisible, setIsCollectionModalVisible] =
+  const [isCollectionModalActionsVisible, setIsCollectionModalActionsVisible] =
     useState(false);
   const { getProductsAndCollections } = useContext(CollectionProductsContext);
 
@@ -14,8 +14,11 @@ export default function HomeLayout() {
   }, []);
 
   return (
-    <CollectionModalContext.Provider
-      value={{ isCollectionModalVisible, setIsCollectionModalVisible }}
+    <CollectionModalActionsContext.Provider
+      value={{
+        isCollectionModalActionsVisible,
+        setIsCollectionModalActionsVisible,
+      }}
     >
       <Stack>
         <Stack.Screen
@@ -52,6 +55,6 @@ export default function HomeLayout() {
           }}
         />
       </Stack>
-    </CollectionModalContext.Provider>
+    </CollectionModalActionsContext.Provider>
   );
 }

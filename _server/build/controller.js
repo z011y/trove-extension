@@ -118,5 +118,7 @@ exports.router.post('/delete-collection/:collectionId', (req, res) => __awaiter(
     if (error)
         res.status(500).json({ message: error.message });
     else
-        res.json({ success: true });
+        res
+            .status(200)
+            .json({ success: true, collectionId: req.params.collectionId });
 }));

@@ -3,6 +3,7 @@ import {
   View,
   Text,
   FlatList,
+  ScrollView,
   Image,
   Pressable,
   StyleSheet,
@@ -15,6 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as WebBrowser from 'expo-web-browser';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
+import { Heading, Paragraph } from '../../../components/Text';
 
 export default function ProductDetails() {
   const { products } = useContext(CollectionProductsContext);
@@ -51,80 +53,74 @@ export default function ProductDetails() {
           <X size="24" weight="bold" />
         </Link>
       </View>
-      <FlatList
+      <ScrollView
         style={{
-          width: width,
-        }}
-        horizontal={true}
-        snapToInterval={imageSize}
-        decelerationRate="fast"
-        data={currentProduct?.image_urls}
-        renderItem={({ item }) => (
-          <Image width={imageSize} height={imageSize} source={{ uri: item }} />
-        )}
-        keyExtractor={(item, index) => item + index}
-      />
-      <View
-        style={{
-          padding: 16,
-          gap: 8,
-          height: height - imageSize,
+          marginBottom: 96,
         }}
       >
-        <Text
+        <FlatList
           style={{
-            fontFamily: 'Epilogue_700Bold',
-            fontSize: 20,
-            color: '#20134b',
-            letterSpacing: -1,
-            lineHeight: 24,
+            width: width,
+          }}
+          horizontal={true}
+          snapToInterval={imageSize}
+          decelerationRate="fast"
+          data={currentProduct?.image_urls}
+          renderItem={({ item }) => (
+            <Image
+              width={imageSize}
+              height={imageSize}
+              source={{ uri: item }}
+            />
+          )}
+          keyExtractor={(item, index) => item + index}
+        />
+        <View
+          style={{
+            padding: 16,
+            gap: 8,
+            height: height - imageSize,
           }}
         >
-          {currentProduct?.name}
-        </Text>
-        <Text
-          style={{
-            fontFamily: 'Epilogue_400Regular',
-            color: '#8E8BA3',
-            letterSpacing: -1,
-          }}
-        >
-          {currentProduct?.brand}
-        </Text>
-        <Text
-          style={{
-            fontFamily: 'Epilogue_500Medium',
-            fontSize: 24,
-            color: '#1D1648',
-          }}
-        >
-          {`$${Number(currentProduct?.price).toFixed(2)}`}
-        </Text>
-        <Text
-          style={{
-            fontFamily: 'Epilogue_400Regular',
-            fontSize: 16,
-            color: '#8E8BA3',
-            letterSpacing: -0.5,
-            lineHeight: 24,
-          }}
-        >
-          {currentProduct?.description}
-        </Text>
-      </View>
+          <Heading level={2} style={{ lineHeight: 24 }}>
+            {currentProduct?.name}
+          </Heading>
+          <Text
+            style={{
+              fontFamily: 'Epilogue_400Regular',
+              color: '#8E8BA3',
+              letterSpacing: -1,
+            }}
+          >
+            {currentProduct?.brand}
+          </Text>
+          <Heading
+            level={1}
+            style={{
+              fontFamily: 'Epilogue_500Medium',
+            }}
+          >
+            {`$${Number(currentProduct?.price).toFixed(2)}`}
+          </Heading>
+          <Paragraph style={{ lineHeight: 24 }}>
+            {currentProduct?.description}
+          </Paragraph>
+        </View>
+      </ScrollView>
       <View
         style={{
           position: 'absolute',
-          bottom: 56,
+          bottom: 0,
           left: 0,
           width: width,
-          height: 112,
+          height: 96,
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          paddingTop: 16,
           paddingLeft: 16,
           paddingRight: 16,
+          backgroundColor: '#fff',
         }}
       >
         <Pressable

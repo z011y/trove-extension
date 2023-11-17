@@ -6,17 +6,18 @@ import {
   Pressable,
   FlatList,
 } from 'react-native';
-import Modal from 'react-native-modal';
 import { Pencil, Trash } from 'phosphor-react-native';
 import * as Haptics from 'expo-haptics';
 import { CollectionProductsContext } from '../context/collections';
+import { Paragraph, Heading } from './Text';
 
-export const CollectionModalContext = createContext(null);
+export const CollectionModalActionsContext = createContext(null);
 
-export default function CollectionModal({ collection }) {
-  const { isCollectionModalVisible, setIsCollectionModalVisible } = useContext(
-    CollectionModalContext
-  );
+export default function CollectionModalActions({ collection }) {
+  const {
+    isCollectionModalActionsVisible,
+    setIsCollectionModalActionsVisible,
+  } = useContext(CollectionModalActionsContext);
   const { getProductsAndCollections } = useContext(CollectionProductsContext);
   const { width, height } = useWindowDimensions();
 
@@ -33,7 +34,7 @@ export default function CollectionModal({ collection }) {
     if (res.status === 200) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       await getProductsAndCollections();
-      setIsCollectionModalVisible(false);
+      setIsCollectionModalActionsVisible(false);
     } else {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     }
@@ -41,17 +42,12 @@ export default function CollectionModal({ collection }) {
 
   const actions = [
     {
-      title: 'Edit Name',
+      title: `Edit "${collection?.name}"`,
       icon: <Pencil size="18" weight="bold" />,
       action: () => null,
     },
     {
-      title: 'Edit Description',
-      icon: <Pencil size="18" weight="bold" />,
-      action: () => null,
-    },
-    {
-      title: 'Delete Collection',
+      title: `Delete "${collection?.name}"`,
       icon: <Trash size="18" weight="bold" color="red" />,
       action: deleteCollection,
     },
@@ -60,8 +56,8 @@ export default function CollectionModal({ collection }) {
   return (
     <Modal
       isVisible={isCollectionModalVisible}
-      onSwipeComplete={() => setIsCollectionModalVisible(false)}
-      onBackdropPress={() => setIsCollectionModalVisible(false)}
+      onSwipeComplete={() => setIsCollectionModalActionsVisible(false)}
+      onBackdropPress={() => setIsCollectionModalActionsVisible(false)}
       swipeDirection="down"
       backdropOpacity={0.25}
       backdropTransitionInTiming={200}
@@ -70,11 +66,13 @@ export default function CollectionModal({ collection }) {
     >
       <View
         style={{
-          height: 256,
+          height: height / 2,
           width: width,
           backgroundColor: '#fff',
           borderRadius: 16,
           padding: 24,
+          display: 'flex',
+          gap: 16,
         }}
       >
         <View
@@ -88,6 +86,8 @@ export default function CollectionModal({ collection }) {
             backgroundColor: '#F3F3F3',
           }}
         />
+        <Heading level={3}>{collection?.name}</Heading>
+        <Paragraph>{collection?.description}</Paragraph>
         <FlatList
           data={actions}
           keyExtractor={(item, index) => item + index}

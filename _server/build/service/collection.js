@@ -12,13 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteCollection = exports.editCollection = exports.addCollection = exports.addToCollection = exports.getCollections = void 0;
 const app_1 = require("../app");
 function getCollections() {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        return yield app_1.db.from('collection').select(`
+        const { data, error } = yield app_1.db.auth.getSession();
+        return yield app_1.db
+            .from('collection')
+            .select(`
       id,
       name,
       description,
       total
-    `);
+    `)
+            .eq('user_id', (_a = data.session) === null || _a === void 0 ? void 0 : _a.user.id);
     });
 }
 exports.getCollections = getCollections;
@@ -60,6 +65,7 @@ function editCollection(collection) {
 }
 exports.editCollection = editCollection;
 function deleteCollection(collectionId) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const collectionProducts = yield app_1.db
             .from('collection_product')
@@ -69,10 +75,7 @@ function deleteCollection(collectionId) {
             .from('collection')
             .delete()
             .eq('id', collectionId);
-        if (collectionProducts.error)
-            return collectionProducts.error;
-        if (collections.error)
-            return collections.error;
+        return (_a = collectionProducts.error) !== null && _a !== void 0 ? _a : collections.error;
     });
 }
 exports.deleteCollection = deleteCollection;

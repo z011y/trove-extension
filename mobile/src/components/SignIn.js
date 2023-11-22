@@ -1,9 +1,15 @@
-import { useState, useContext } from 'react';
-import { View, TextInput, Button } from 'react-native';
+import { useState, useContext, createContext } from 'react';
+import { View, TextInput } from 'react-native';
 import { Paragraph, Heading } from './Text';
-import { SessionContext } from '../app/_layout';
-import { Envelope, Password } from 'phosphor-react-native';
+import {
+  Envelope,
+  Password,
+  SignIn as SignInIcon,
+} from 'phosphor-react-native';
 import Input from './Input';
+import Button from './Button';
+
+export const SessionContext = createContext(null);
 
 export default function SignIn() {
   const [email, setEmail] = useState();
@@ -50,7 +56,11 @@ export default function SignIn() {
         placeholder="Your password"
         secureTextEntry={true}
       />
-      <Button title="Sign In" onPress={signIn} />
+      <Button
+        title="Sign In"
+        onPress={signIn}
+        icon={<SignInIcon size="18" weight="bold" />}
+      />
     </View>
   );
 }

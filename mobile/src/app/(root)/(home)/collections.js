@@ -8,11 +8,11 @@ import {
   Pressable,
   useWindowDimensions,
 } from 'react-native';
-import ProductListItem from '../../components/ProductListItem';
+import ProductListItem from '../../../components/ProductListItem';
 import { X } from 'phosphor-react-native';
-import { CollectionProductsContext } from '../../context/collections';
-import CollectionListItem from '../../components/CollectionListItem';
-import { ActiveCollectionContext } from '../../context/activeCollection';
+import { CollectionProductsContext } from '../../../context/collections';
+import CollectionListItem from '../../../components/CollectionListItem';
+import { ActiveCollectionContext } from '../../../context/activeCollection';
 
 export default function Collections() {
   const { collections } = useContext(CollectionProductsContext);

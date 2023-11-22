@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { Button, View, StyleSheet, useWindowDimensions } from 'react-native';
-import ProductListItem from '../components/ProductListItem';
-import { CollectionProductsContext } from '../context/collections';
-import { SessionContext } from './_layout';
+import ProductListItem from '../../components/ProductListItem';
+import { CollectionProductsContext } from '../../context/collections';
+import { SessionContext } from '../../components/SignIn';
 
 export default function Account() {
   const { setSession } = useContext(SessionContext);

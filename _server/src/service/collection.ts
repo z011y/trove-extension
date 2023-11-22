@@ -32,13 +32,14 @@ export async function addToCollection(
 export async function addCollection(
   collection: Collection
 ): Promise<PostgrestSingleResponse<Collection[]>> {
+  const { data, error } = await db.auth.getSession();
   return await db
     .from('collection')
     .insert([
       {
-        name: collection.name,
-        description: collection.description,
-        user_id: collection.user_id,
+        name: collection?.name,
+        description: collection?.description,
+        user_id: data.session?.user.id,
       },
     ])
     .select();

@@ -7,8 +7,8 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
-import ProductListItem from '../components/ProductListItem';
-import { CollectionProductsContext } from '../context/collections';
+import ProductListItem from '../../components/ProductListItem';
+import { CollectionProductsContext } from '../../context/collections';
 import { WebView } from 'react-native-webview';
 
 export default function Shop() {

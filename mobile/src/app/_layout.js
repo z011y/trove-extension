@@ -1,4 +1,5 @@
 import { Tabs } from 'expo-router/tabs';
+import { useWindowDimensions } from 'react-native';
 import { Coins, Storefront, UserCircle } from 'phosphor-react-native';
 import { useState, useEffect, createContext } from 'react';
 import {
@@ -12,9 +13,13 @@ import {
   ActiveCollectionContext,
   ActiveCollectionProvider,
 } from '../context/activeCollection';
-import SignIn from '../components/SignIn';
-
-export const SessionContext = createContext(null);
+import SignIn, { SessionContext } from '../components/SignIn';
+import { Drawer } from 'expo-router/drawer';
+import Header from '../components/Header';
+import { CollectionModalActionsContext } from '../components/CollectionModalActions';
+import { CollectionModalAddContext } from '../components/CollectionModalAdd';
+import { CollectionModalEditContext } from '../components/CollectionModalEdit';
+import Sidebar from '../components/Sidebar';
 
 export default function AppLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -23,6 +28,23 @@ export default function AppLayout() {
     Epilogue_700Bold,
   });
   const [session, setSession] = useState(null);
+  const [isCollectionModalActionsVisible, setIsCollectionModalActionsVisible] =
+    useState(false);
+  const [isCollectionModalAddVisible, setIsCollectionModalAddVisible] =
+    useState(false);
+  const [isCollectionModalEditVisible, setIsCollectionModalEditVisible] =
+    useState(false);
+  const { width } = useWindowDimensions();
+
+  async function getSession() {
+    const res = await fetch('http://10.0.0.139:3001/get-session');
+    const data = await res.json();
+    setSession(data.session);
+  }
+
+  useEffect(() => {
+    getSession();
+  }, []);
 
   if (!fontsLoaded && !fontError) {
     return null;
@@ -40,56 +62,45 @@ export default function AppLayout() {
     <SessionContext.Provider value={{ session, setSession }}>
       <CollectionProductsProvider>
         <ActiveCollectionProvider>
-          <Tabs
-            screenOptions={{
-              tabBarStyle: {
-                paddingTop: 16,
-                borderTopWidth: 0,
-                borderTopColor: 'transparent',
-              },
-              tabBarActiveTintColor: '#20134B',
-              tabBarInactiveTintColor: '#8E8BA3',
-              tabBarShowLabel: false,
+          <CollectionModalEditContext.Provider
+            value={{
+              isCollectionModalEditVisible,
+              setIsCollectionModalEditVisible,
             }}
           >
-            <Tabs.Screen
-              name="(home)"
-              options={{
-                headerShown: false,
-                tabBarIcon: ({ focused }) => (
-                  <Coins
-                    size="28"
-                    weight={focused ? 'fill' : 'regular'}
-                    color={focused ? '#20134B' : '#8E8BA3'}
-                  />
-                ),
+            <CollectionModalActionsContext.Provider
+              value={{
+                isCollectionModalActionsVisible,
+                setIsCollectionModalActionsVisible,
               }}
-            />
-            <Tabs.Screen
-              name="shop"
-              options={{
-                tabBarIcon: ({ focused }) => (
-                  <Storefront
-                    size="28"
-                    weight={focused ? 'fill' : 'regular'}
-                    color={focused ? '#20134B' : '#8E8BA3'}
+            >
+              <CollectionModalAddContext.Provider
+                value={{
+                  isCollectionModalAddVisible,
+                  setIsCollectionModalAddVisible,
+                }}
+              >
+                <Drawer
+                  drawerContent={({ navigation }) => (
+                    <Sidebar navigation={navigation} />
+                  )}
+                  screenOptions={{
+                    drawerStyle: {
+                      width: width - 64,
+                    },
+                    overlayColor: 'rgba(0,0,0,0.1)',
+                  }}
+                >
+                  <Drawer.Screen
+                    name="(root)"
+                    options={{
+                      headerShown: false,
+                    }}
                   />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="account"
-              options={{
-                tabBarIcon: ({ focused }) => (
-                  <UserCircle
-                    size="28"
-                    weight={focused ? 'fill' : 'regular'}
-                    color={focused ? '#20134B' : 'rgba(32, 19, 75, 0.6)'}
-                  />
-                ),
-              }}
-            />
-          </Tabs>
+                </Drawer>
+              </CollectionModalAddContext.Provider>
+            </CollectionModalActionsContext.Provider>
+          </CollectionModalEditContext.Provider>
         </ActiveCollectionProvider>
       </CollectionProductsProvider>
     </SessionContext.Provider>

@@ -16,6 +16,7 @@ import {
 } from 'react-native-gesture-handler';
 import { SquaresFour, Plus } from 'phosphor-react-native';
 import { ActiveCollectionContext } from '../context/activeCollection';
+import { CollectionModalAddContext } from './CollectionModalAdd';
 import * as Haptics from 'expo-haptics';
 
 export default function CollectionTabs() {
@@ -27,6 +28,9 @@ export default function CollectionTabs() {
   const listRef = useRef(null);
   const { collections } = useContext(CollectionProductsContext);
   const { setActiveCollection } = useContext(ActiveCollectionContext);
+  const { setIsCollectionModalAddVisible } = useContext(
+    CollectionModalAddContext
+  );
   const { width } = useWindowDimensions();
   const tabPositions = [];
 
@@ -147,6 +151,10 @@ export default function CollectionTabs() {
         keyExtractor={(item) => item.id}
       />
       <Pressable
+        onPress={() => {
+          Haptics.selectionAsync();
+          setIsCollectionModalAddVisible(true);
+        }}
         style={{
           display: 'flex',
           justifyContent: 'center',

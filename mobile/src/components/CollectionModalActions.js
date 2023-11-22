@@ -1,23 +1,32 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useState } from 'react';
 import {
   View,
   Text,
   useWindowDimensions,
   Pressable,
   FlatList,
+  Animated,
+  LayoutAnimation,
 } from 'react-native';
 import { Pencil, Trash } from 'phosphor-react-native';
 import * as Haptics from 'expo-haptics';
 import { CollectionProductsContext } from '../context/collections';
 import { Paragraph, Heading } from './Text';
+import SwipeableModal from './SwipableModal';
+import { CollectionModalEditContext } from './CollectionModalEdit';
+import CollectionModalEdit from './CollectionModalEdit';
 
 export const CollectionModalActionsContext = createContext(null);
 
 export default function CollectionModalActions({ collection }) {
+  const [isEditing, setIsEditing] = useState(false);
   const {
     isCollectionModalActionsVisible,
     setIsCollectionModalActionsVisible,
   } = useContext(CollectionModalActionsContext);
+  const { setIsCollectionModalEditVisible } = useContext(
+    CollectionModalEditContext
+  );
   const { getProductsAndCollections } = useContext(CollectionProductsContext);
   const { width, height } = useWindowDimensions();
 
@@ -30,7 +39,6 @@ export default function CollectionModalActions({ collection }) {
       }
     );
     const data = await res.json();
-    console.log(data);
     if (res.status === 200) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       await getProductsAndCollections();
@@ -44,7 +52,14 @@ export default function CollectionModalActions({ collection }) {
     {
       title: `Edit "${collection?.name}"`,
       icon: <Pencil size="18" weight="bold" />,
-      action: () => null,
+      action: () => {
+        Haptics.selectionAsync();
+        LayoutAnimation.configureNext({
+          duration: 400,
+          update: { type: 'spring', springDamping: 0.6 },
+        });
+        setIsEditing(true);
+      },
     },
     {
       title: `Delete "${collection?.name}"`,
@@ -54,71 +69,60 @@ export default function CollectionModalActions({ collection }) {
   ];
 
   return (
-    <Modal
-      isVisible={isCollectionModalVisible}
+    <SwipeableModal
+      isVisible={isCollectionModalActionsVisible}
       onSwipeComplete={() => setIsCollectionModalActionsVisible(false)}
       onBackdropPress={() => setIsCollectionModalActionsVisible(false)}
-      swipeDirection="down"
-      backdropOpacity={0.25}
-      backdropTransitionInTiming={200}
-      backdropTransitionOutTiming={200}
-      style={{ margin: 0, display: 'flex', justifyContent: 'flex-end' }}
+      modalHeight={isEditing ? height / 1.25 : height / 2}
     >
-      <View
-        style={{
-          height: height / 2,
-          width: width,
-          backgroundColor: '#fff',
-          borderRadius: 16,
-          padding: 24,
-          display: 'flex',
-          gap: 16,
-        }}
-      >
-        <View
-          style={{
-            position: 'absolute',
-            top: 4,
-            left: width / 2 - 32,
-            width: 64,
-            height: 4,
-            borderRadius: 4,
-            backgroundColor: '#F3F3F3',
+      {isEditing ? (
+        <CollectionModalEdit
+          collection={collection}
+          back={() => {
+            Haptics.selectionAsync();
+            LayoutAnimation.configureNext({
+              duration: 400,
+              update: { type: 'spring', springDamping: 0.6 },
+            });
+            setIsEditing(false);
           }}
         />
-        <Heading level={3}>{collection?.name}</Heading>
-        <Paragraph>{collection?.description}</Paragraph>
-        <FlatList
-          data={actions}
-          keyExtractor={(item, index) => item + index}
-          ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-          renderItem={({ item }) => (
-            <Pressable onPress={item.action}>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: 16,
-                  backgroundColor: '#F3F3F3',
-                  borderRadius: 16,
-                }}
-              >
-                <Text
+      ) : (
+        <>
+          <Heading level={3}>{collection?.name}</Heading>
+          <Paragraph>{collection?.description}</Paragraph>
+          <FlatList
+            data={actions}
+            keyExtractor={(item, index) => item + index}
+            ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+            renderItem={({ item }) => (
+              <Pressable onPress={item.action}>
+                <View
                   style={{
-                    height: 18,
-                    fontFamily: 'Epilogue_500Medium',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: 16,
+                    backgroundColor: '#F3F3F3',
+                    borderRadius: 16,
                   }}
                 >
-                  {item.title}
-                </Text>
-                {item.icon}
-              </View>
-            </Pressable>
-          )}
-        />
-      </View>
-    </Modal>
+                  <Text
+                    style={{
+                      height: 18,
+                      fontFamily: 'Epilogue_500Medium',
+                    }}
+                  >
+                    {item.title}
+                  </Text>
+                  {item.icon}
+                </View>
+              </Pressable>
+            )}
+          />
+        </>
+      )}
+    </SwipeableModal>
   );
 }

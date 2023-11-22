@@ -4,7 +4,6 @@ import { DotsThree } from 'phosphor-react-native';
 
 export default function CollectionListItem({ collection }) {
   const { width, height } = useWindowDimensions();
-  console.log(collection.products);
   const imageWidth = (width / 2 - 32 - 32 - 8) / 2;
 
   return (

@@ -37,14 +37,16 @@ function addToCollection(productId, collectionId) {
 }
 exports.addToCollection = addToCollection;
 function addCollection(collection) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        const { data, error } = yield app_1.db.auth.getSession();
         return yield app_1.db
             .from('collection')
             .insert([
             {
-                name: collection.name,
-                description: collection.description,
-                user_id: collection.user_id,
+                name: collection === null || collection === void 0 ? void 0 : collection.name,
+                description: collection === null || collection === void 0 ? void 0 : collection.description,
+                user_id: (_a = data.session) === null || _a === void 0 ? void 0 : _a.user.id,
             },
         ])
             .select();

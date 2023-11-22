@@ -6,33 +6,27 @@ import {
   Text,
   useWindowDimensions,
 } from 'react-native';
-import { Link } from 'expo-router';
-import ProductListItem from '../../components/ProductListItem';
-import { CollectionProductsContext } from '../../context/collections';
-import { ActiveCollectionContext } from '../../context/activeCollection';
-import CollectionTabs from '../../components/CollectionTabs';
-import CollectionModalActions from '../../components/CollectionModalActions';
-import CollectionModalAdd from '../../components/CollectionModalAdd';
-import { Paragraph } from '../../components/Text';
+import { Link, useLocalSearchParams } from 'expo-router';
+import ProductListItem from '../../../../components/ProductListItem';
+import { CollectionProductsContext } from '../../../../context/collections';
+import { ActiveCollectionContext } from '../../../../context/activeCollection';
+import CollectionTabs from '../../../../components/CollectionTabs';
+import CollectionModalActions from '../../../../components/CollectionModalActions';
+import CollectionModalAdd from '../../../../components/CollectionModalAdd';
+import CollectionModalEdit from '../../../../components/CollectionModalEdit';
+import { Paragraph } from '../../../../components/Text';
 
-export default function Home() {
+export default function Collection() {
+  const { id } = useLocalSearchParams();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { products, collections, getProductsAndCollections } = useContext(
     CollectionProductsContext
   );
-  const { activeCollection } = useContext(ActiveCollectionContext);
   const { width, height } = useWindowDimensions();
   const [collectionProducts, setCollectionProducts] = useState(products);
-
-  async function getProductsForCollection() {
-    const res = await fetch(
-      `http://10.0.0.139:3001/get-products-for-collection/${
-        collections[activeCollection - 1].id
-      }`
-    );
-    const data = await res.json();
-    setCollectionProducts(data);
-  }
+  const currentCollection = collections.find(
+    (collection) => collection.id === id
+  );
 
   async function refresh() {
     setIsRefreshing(true);
@@ -41,17 +35,17 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (activeCollection === 0) {
+    if (id === 0) {
       setCollectionProducts(products);
     } else {
-      setCollectionProducts(collections[activeCollection - 1].products);
+      setCollectionProducts(currentCollection?.products);
     }
-  }, [products, activeCollection]);
+  }, [products]);
 
   return (
     <View style={styles.container}>
       <CollectionTabs />
-      <CollectionModalActions collection={collections[activeCollection - 1]} />
+      <CollectionModalActions collection={currentCollection} />
       <CollectionModalAdd />
       <FlatList
         style={{

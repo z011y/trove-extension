@@ -80,14 +80,21 @@ export default function ProductListItem({ product }) {
               >{`$${Number(product?.price).toFixed(2)}`}</Text>
             </BlurView>
           </View>
-          <Image
+          <View
             style={{
+              backgroundColor: '#f3f3f3',
               borderRadius: 16,
             }}
-            height={width / 2 - 24}
-            width={width / 2 - 24}
-            source={{ uri: product?.image_urls[0] }}
-          />
+          >
+            <Image
+              style={{
+                borderRadius: 16,
+              }}
+              height={width / 2 - 24}
+              width={width / 2 - 24}
+              source={{ uri: product?.image_urls[0] }}
+            />
+          </View>
         </View>
         <View
           style={{

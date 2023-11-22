@@ -8,11 +8,11 @@ import {
   KeyboardAvoidingView,
   useWindowDimensions,
 } from 'react-native';
-import ProductListItem from '../../components/ProductListItem';
+import ProductListItem from '../../../components/ProductListItem';
 import { X } from 'phosphor-react-native';
-import CollectionListItem from '../../components/CollectionListItem';
-import { CollectionProductsContext } from '../../context/collections';
-import SearchHeader from '../../components/SearchHeader';
+import CollectionListItem from '../../../components/CollectionListItem';
+import { CollectionProductsContext } from '../../../context/collections';
+import SearchHeader from '../../../components/SearchHeader';
 
 export default function Search() {
   const [query, setQuery] = useState(null);

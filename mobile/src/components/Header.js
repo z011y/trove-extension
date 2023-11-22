@@ -7,9 +7,10 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { useRouter, Link } from 'expo-router';
+import { useRouter, Link, useNavigation } from 'expo-router';
 import {
   CaretDown,
+  Equals,
   MagnifyingGlass,
   PencilSimple,
   Plus,
@@ -26,7 +27,7 @@ export default function Header() {
     CollectionModalActionsContext
   );
   const { width } = useWindowDimensions();
-  const router = useRouter();
+  const navigation = useNavigation();
 
   return (
     <View
@@ -48,6 +49,9 @@ export default function Header() {
           paddingRight: 24,
         }}
       >
+        <Pressable onPress={() => navigation.openDrawer()}>
+          <Equals size="24" weight="bold" />
+        </Pressable>
         {/* <Link
           href={{
             pathname: `/(home)/collection/${collections[activeCollection - 1]}`,
@@ -58,7 +62,7 @@ export default function Header() {
           <Pressable
             onPress={() => {
               Haptics.selectionAsync();
-              setIsCollectionModalVisible(true);
+              setIsCollectionModalActionsVisible(true);
             }}
           >
             <View

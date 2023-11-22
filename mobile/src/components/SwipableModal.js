@@ -1,13 +1,16 @@
-import { View } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import Modal from 'react-native-modal';
 
 export default function SwipeableModal({
   children,
+  modalHeight,
   isVisible,
   onSwipeComplete,
   onBackdropPress,
   swipeDirection = 'down',
 }) {
+  const { width, height } = useWindowDimensions();
+
   return (
     <Modal
       isVisible={isVisible}
@@ -21,7 +24,7 @@ export default function SwipeableModal({
     >
       <View
         style={{
-          height: height / 2,
+          height: modalHeight ?? height / 2,
           width: width,
           backgroundColor: '#fff',
           borderRadius: 16,

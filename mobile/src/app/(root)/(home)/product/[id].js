@@ -11,12 +11,13 @@ import {
 } from 'react-native';
 import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import { X, Link as LinkIcon, ArrowSquareOut } from 'phosphor-react-native';
-import { CollectionProductsContext } from '../../../context/collections';
+import { CollectionProductsContext } from '../../../../context/collections';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as WebBrowser from 'expo-web-browser';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
-import { Heading, Paragraph } from '../../../components/Text';
+import { Heading, Paragraph } from '../../../../components/Text';
+import Button from '../../../../components/Button';
 
 export default function ProductDetails() {
   const { products } = useContext(CollectionProductsContext);
@@ -140,46 +141,17 @@ export default function ProductDetails() {
         >
           <LinkIcon size={18} weight="bold" />
         </Pressable>
-        <Pressable
+        <Button
+          title="Visit Site"
+          icon={<ArrowSquareOut size={18} weight="bold" />}
           onPress={() => {
             WebBrowser.openBrowserAsync(currentProduct?.url);
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           }}
           style={{
             width: width - 20 - 48 - 16 - 8,
-            borderRadius: 12,
-            height: 48,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 4,
-            overflow: 'hidden',
           }}
-        >
-          <LinearGradient
-            style={{ ...StyleSheet.absoluteFill }}
-            colors={['#F0C8C9', '#D5D0F5', '#BED9F5']}
-            start={{
-              x: 0,
-              y: 0.5,
-            }}
-            end={{
-              x: 1,
-              y: 0.5,
-            }}
-          />
-          <Text
-            style={{
-              fontFamily: 'Epilogue_500Medium',
-              letterSpacing: -0.5,
-              height: 12,
-            }}
-          >
-            Visit Site
-          </Text>
-          <ArrowSquareOut size={18} weight="bold" />
-        </Pressable>
+        />
       </View>
     </View>
   );
